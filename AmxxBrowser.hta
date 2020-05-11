@@ -18,7 +18,7 @@
 	
 	
 	<!--  https://raw.githubusercontent.com/krasimir/gifffer/master/build/gifffer.min.js   -->
-	<script type="text/javascript" src="dependencies/gifffer.min.js"></script>
+		<script type="text/javascript" src="dependencies/gifffer.min.js"></script>
 	
 	<style>
 ::-ms-clear { display: none; }   <!-- remove bugged IE clear cross in filter input -->
@@ -67,6 +67,7 @@ tbody td, thead th {
 	
 	
 	
+	
     </head>
 
 
@@ -74,6 +75,27 @@ tbody td, thead th {
 <body>
 <h3>Amxx Plugin brower</h3>
 
+
+<SCRIPT language="VBScript">
+Dim CurPluginNumber
+</SCRIPT>
+
+
+
+
+<SCRIPT language="VBScript">
+Sub Start_Button
+document.GetElementById("chk_2").checked = true
+'msgbox "chk_"	
+'msgbox CurPluginNumber
+    For i = 1 To CurPluginNumber
+        If document.GetElementById("chk_"& i).checked Then
+			msgbox "chk_"& i
+        End If
+    Next
+End Sub
+</SCRIPT>
+	
 
 <!--   ----------------------------------  Tabs ----------------------------------    -->
 
@@ -98,7 +120,7 @@ tbody td, thead th {
 <div id="myTabContent" class="tab-content">
   <div class="tab-pane fade active in" id="home">
 
-<input type="text" id="NameInputFilter" onkeyup="FilterTable()" placeholder="Search for names.." title="Type in a name">
+
 <!--<table class="table table-hover" id="PluginsTable">     <table class="table table-striped table-hover" id="PluginsTable"> -->
 <table class="table table-hover" id="PluginsTable"> 
 <thead>
@@ -111,44 +133,80 @@ tbody td, thead th {
   </tr>
 </thead>
 
+  
+      <tr class="warning" id="filterRow">
+        
+        <th></th>
+        <th><input type="text" id="NameInputFilter" onkeyup="FilterTable()" placeholder="Search for names.." title="Type in a name"></th>
+        <th></th>
+        <th></th>
+		<th><input type="checkbox">Filter enabled	</th>
+      </tr>
+  
+
 <tbody>
 
 
+
 <script type="text/vbs">
-Dim ObjFile
-set fso=CreateObject("Scripting.FileSystemObject")
-set fldr=fso.GetFolder(".")
 
-Dim CurPluginNumber	
+Set FSO = CreateObject("Scripting.FileSystemObject")
+ShowSubfolders FSO.GetFolder(".\Plugins"), 1     'here we can indicate the depth of subfolders we want
 
-WalkFolder fldr
 
-Sub WalkFolder(CurrentFolder)
-Dim SubFolder
-For Each SubFolder In CurrentFolder.SubFolders
-WalkFolder SubFolder
-Next
 
-Dim CurrentFile
+Sub ShowSubFolders(Folder, Depth)
+	
+	Dim StrData
 
-For Each CurrentFile in CurrentFolder.Files
-IF CurrentFile.name="description.txt" then
-
-Set File = fso.OpenTextFile(CurrentFile)
-do until File.atendofstream
-StrData = StrData & "<Br>" & trim(File.ReadLine)
-Loop
-File.close
-CurPluginNumber = CurPluginNumber  + 1 
-document.write "<tr class=""table-secondary""><td>" & CurPluginNumber & "</td><td>" & CurrentFolder.name & "</td>"
-document.write "<td>" & StrData & "</td>"
-end if
-IF lcase(right(CurrentFile.name,4))=".gif" then
-document.write "<td><img height='200' width='250' data-gifffer=""Plugins\" &CurrentFolder.name & "\" & CurrentFile.name & """></td><td><button type=""button"" class=""btn btn-success"">Add</button><button type=""button"" class=""btn btn-danger"">Remove</button></td></tr>"
-end if
-Next
+    If Depth > 0 then
+		
+        For Each Subfolder in Folder.SubFolders
+            'Wscript.Echo Subfolder.Path
+			StrData = ""
+			CurPluginNumber = CurPluginNumber + 1
+			document.write "<tr class=""table-secondary""><td>" & CurPluginNumber & "</td><td>" & Subfolder.name & "</td>"   ' <<<<<<<<<------------------  Here we write the number and the name of the plugin (based on folder name)
+			
+			' ============================  Description  ============================
+			filepath = FSO.BuildPath(Subfolder.Path, "Description.txt")
+			If FSO.FileExists(filepath) Then    ' Description file is the minimum to show a subfolder in the GUI
+				Set File = fso.OpenTextFile(filepath)
+				Do until File.atendofstream
+					StrData = StrData & "<Br>" & trim(File.ReadLine)
+				Loop
+				File.close
+				document.write "<td>" & StrData & "</td>"       ' <<<<<<<<<------------------  Here we write the description
+			Else
+				document.write "<td> No Description</td>"
+				'Wscript.Echo "File does not exist."    ' Here we log that a subfolder exist without description
+			End If
+			' ============================  Preview File  ============================
+			filepath = FSO.BuildPath(Subfolder.Path, "Preview.gif")
+			If FSO.FileExists(filepath) Then
+			document.write "<td><img height='200' width='250' data-gifffer=""" & filepath & """></td>"
+			Else
+				'Wscript.Echo "File does not exist."    
+				filepath = FSO.BuildPath(Subfolder.Path, "Preview.mp4")
+				If FSO.FileExists(filepath) Then
+					document.write "<td><video width='250' height='200' controls>  <source src=""" & filepath & """ type='video/mp4'>Your browser does not support the video tag.</video></td>"
+					'document.write "<td><embed src=""" & filepath & """ width=""250"" height=""200"" autostart=""false"" type=""video/mp4""></td>"
+					'document.write "<td><iframe src='https://player.vimeo.com/video/298038460?loop=1&byline=0&portrait=0&title=0&transparent=0' allowtransparency></iframe></td>"
+					'document.write "<td><iframe width='320' height='240	' src='https://www.youtube.com/embed/YGPm77kDddg' frameborder='0' allow='autoplay; encrypted-media; picture-in-picture' allowfullscreen></iframe></td>"
+				Else
+					document.write "<td> No Preview</td>"
+					'Wscript.Echo "File does not exist."    ' Here we log that a subfolder exist without any Preview
+				End If
+			End If
+			document.write "<td><input type=""checkbox"" id='chk_"& CurPluginNumber &"'><button type=""button"" class=""btn btn-success"">Add</button><button type=""button"" class=""btn btn-danger"">Remove</button></td></tr>"   ' <<<<<<<<<------------------  Here we write the actions column
+            ShowSubFolders Subfolder, Depth -1    'recursive call
+        Next
+    End if
 End Sub
+
 </script>
+
+
+	
 </tbody>
 </table>
 
@@ -169,7 +227,24 @@ window.onload = function() {
     Gifffer();
 }
 
+$(document).ready(function() {
+     $("#filterRow input[type=checkbox]").click(function(){
+     if($(this).is(":checked"))
+     {
+       $("input[type=checkbox]").each(function() {
+       if($(this).is(":checked"))
+        $(this).parent().parent().show();
+       else
+        $(this).parent().parent().hide();
+       });
 
+     }
+     else
+     {
+       $("input[type=checkbox]").parent().parent().show();
+     }
+    });
+});
 
 function FilterTable() {
   var input, filter, table, tr, td, i, txtValue;
@@ -192,6 +267,9 @@ function FilterTable() {
 
 
 </script>
+
+
+
 
 
 
