@@ -1,4 +1,0 @@
-<b>This is bold description</b>
-blablabla
-yes blabla
-<a href="https://www.w3schools.com/html/">Visit our HTML tutorial</a>

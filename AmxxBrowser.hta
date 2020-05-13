@@ -1,87 +1,119 @@
 <!-- AMXX Browser V0.2 alpha -->
-
+<!-- 2020-05-13 By Schmurtz -->
 <html>
     <head>
-	  <meta charset="utf-8">
-      <meta http-equiv="x-ua-compatible" content="IE=10">
-    <meta http-equiv="content-type" content="text/html">
-  <meta name="viewport" content="width=device-width, initial-scale=1">  
-    <title>Test</title>
-   <!--  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/darkly/bootstrap.min.css">-->
-   
-	<link rel='stylesheet' href='https://bootswatch.com/3/darkly/bootstrap.min.css'>
-	<!--   <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>-->
-	<!--  <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>-->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	 <!-- <script src='https://bootswatch.com/_vendor/jquery/dist/jquery.min.js'></script>-->
-	  
-	  
-  <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js'></script>
-  <script type="text/javascript" src='dependencies\jQuery.FilterTable\jquery.filtertable.js'></script>   <!-- more powerful filter -->
-    <!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
-	
-	
-	<!--  https://raw.githubusercontent.com/krasimir/gifffer/master/build/gifffer.min.js   -->
-		<script type="text/javascript" src="dependencies/gifffer.min.js"></script>
+		<meta charset="utf-8">
+		<meta http-equiv="x-ua-compatible" content="IE=10">
+		<meta http-equiv="content-type" content="text/html">
+		<meta name="viewport" content="width=device-width, initial-scale=1">  
 		
-		<!-- video-js Support (better player than the default integrated in IE/hta-->
-  <link href="https://vjs.zencdn.net/7.8.1/video-js.css" rel="stylesheet" />
+		
+		<title>Amxx Browser</title>
+		<HTA:APPLICATION
+		  ID = "Amxx Browser"
+		  icon="http://files.softicons.com/download/social-media-icons/free-large-twitter-icons-by-aha-soft/ico/Audio.ico"
+		  APPLICATIONNAME="Amxx Browser"
+		  SCROLL="no"
+		  navigable="no"
+		  selection="no"
+		  showintaskbar="yes"
+		  singleinstance="no"
+		  innerborder="no"
+		  maximizebutton="no"
+		  minimizebutton="yes"
+		  border="dialog"
+		  borderstyle="normal"
+		  caption="yes"
+		  contextMenu="no"
+		  sysmenu="yes"
+		 >
+		
+		<!--  ========================================== jquery ========================================== -->
+			<!--  <script src='https://bootswatch.com/_vendor/jquery/dist/jquery.min.js'></script>    v3.4.1-->
+			<!--  <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'> </script>  -->
+			<!--  <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js'>  </script>  -->
+			<!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
+			<!-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script> -->
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">  </script>
 
-  <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
-  <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
-	
-	<!-- remove bugged IE clear cross in filter input -->
-	<!-- 	<style>::-ms-clear { display: none; } </style>    -->
- 
- 
-<style> <!-- Color for the table cell when filter is active -->
-.filter-table .quick { margin-left: 0.5em; font-size: 0.8em; text-decoration: none; }
-.fitler-table .quick:hover { text-decoration: underline; }
-td.alt { background-color: #ffc; background-color: rgba(0, 255, 0, 0.2); }
-</style> 
-	
-	<!--     If you want to keep table header on top, uncomment this CSS section-->
-	<!-- 
-
-table {
-    width: 100%;
-}
-
-thead, tbody, tr, td, th { display: block; }
-
-tr:after {
-    content: ' ';
-    display: block;
-    visibility: hidden;
-    clear: both;
-}
-
-thead th {
-    height: 30px;
-
-    /*text-align: left;*/
-}
-
-tbody {
-    height: 520px;
-    overflow-y: auto;
-}
-
-thead {
-    /* fallback */
-}
+		<!--  ======================================= bootstrapcdn ======================================= -->
+			
+			<!--  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/darkly/bootstrap.min.css">-->
+			<link rel='stylesheet' href='https://bootswatch.com/3/darkly/bootstrap.min.css'>
+			<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js'></script>
 
 
-tbody td, thead th {
-    width: 19.2%;
-    float: left;
-}
+		<!--  ======================================== Table Filter ======================================== -->
 
---> 	
-	
-	
-	
-	
+			<!-- jQuery.FilterTable : more powerful filter -->
+			<!--  <script type="text/javascript" src='dependencies\jQuery.FilterTable\jquery.filtertable.js'></script>   -->
+
+			<!-- Even  more powerful filter ! -->
+			
+			<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/b-colvis-1.6.2/b-html5-1.6.2/b-print-1.6.2/kt-2.5.2/sc-2.0.2/sp-1.1.0/datatables.min.css"/>
+			<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/b-colvis-1.6.2/b-html5-1.6.2/b-print-1.6.2/kt-2.5.2/sc-2.0.2/sp-1.1.0/datatables.min.js"></script>
+
+			<!-- Working fine but not perfect CSS with bootstrapcdn
+			<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jqc-1.12.4/datatables.min.css"/>
+			<script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+			-->
+
+		<!--  ==================================== GIF animated library ==================================== -->
+
+			<!--  https://raw.githubusercontent.com/krasimir/gifffer/master/build/gifffer.min.js   -->
+			<script type="text/javascript" src="dependencies/gifffer.min.js"></script>
+
+			
+		<!--  ==================================== Video player library ==================================== -->
+			<!-- video-js Support (better player than the default integrated in IE/hta-->
+			<link href="https://vjs.zencdn.net/7.8.1/video-js.css" rel="stylesheet" />
+
+			<!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
+			<script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+			
+			
+			
+			
+		<!--  *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*= CSS Management *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*= -->
+					
+
+		<!-- remove bugged IE clear cross in filter input -->
+		<!-- 	<style>::-ms-clear { display: none; } </style>    -->
+		
+		<!--  *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*= -->
+		 <!-- Color for the table cell when filter is active  (declaration for  jQuery.FilterTable)  -->
+		<!-- 
+		<style> 
+		.filter-table .quick { margin-left: 0.5em; font-size: 0.8em; text-decoration: none; }
+		.fitler-table .quick:hover { text-decoration: underline; }
+		td.alt { background-color: #ffc; background-color: rgba(0, 255, 0, 0.2); }
+		</style>
+		-->
+		
+		<!--  *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*= -->
+		
+		<!--     If you want to keep table header on top, uncomment this CSS section-->
+		<!-- 
+
+		table {    width: 100%;}
+		thead, tbody, tr, td, th { display: block; }
+		tr:after { content: ' '; display: block;  visibility: hidden;  clear: both; }
+		thead th { height: 30px; /*text-align: left;*/ }
+		tbody { height: 520px; overflow-y: auto; }
+		thead { /* fallback */}
+		tbody td, thead th { width: 19.2%; float: left; }
+		-->
+		
+		<!--  *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*= -->
+		<style> 
+		 tfoot input {
+				width: 100%;
+				padding: 3px;
+				box-sizing: border-box;
+			}
+		</style>
+			
+
     </head>
 
 
@@ -133,16 +165,20 @@ End Sub
 
 <div id="myTabContent" class="tab-content">
   <div class="tab-pane fade active in" id="home">
-
-  
-  
+	<BR>
+  <!--   --------------------------- some tests for later....
+  <img src="data:image/gif;base64,R0lGODlhEAAOALMAAOazToeHh0tLS/7LZv/0jvb29t/f3//Ub//ge8WSLf/rhf/3kdbW1mxsbP//mf///yH5BAAAAAAALAAAAAAQAA4AAARe8L1Ekyky67QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjgaORCMxIC6e0CcguWw6aFjsVMkkIr7g77ZKPJjPZqIyd7sJAgVGoEGv2xsBxqNgYPj/gAwXEQA7"width="16" height="14" alt="embedded folder icon">
   
   <Br>&nbsp;&nbsp;&nbsp;<input type="IMAGE" <img alt="Test Button" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOcwAADnMBOWAVqQAAAAd0SU1FB+QFCwwuArLzaiEAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuM4zml1AAAAJpSURBVEhLrZaBceIwEEWvk9AB6cB0AB1AB7iDpAPowO4AOggd2B3gDrgOuOf98loosknm+KPRSCv5fa1kC/5Ug/YvVYBWVTBIov+pmNYbqP/XdL/f44bXb4vibVlQ0/6JxBwNqA2bEbOL1aanq5iH4qqzcmzGgGGvJUerEaKRjPmgOYNEbds6Wo3dvuwbi2K92R2O1Wq9u3bd5XKBuy8/f2fA1BidaXvXLFfr7e8M9FiMY9XEv74uI9fin4cjcdHRjw0cPeCW76uxawV0XZ+AhmfMJmPQdd3tdlMdJiqDAZQpNoqlJsujX/+UQSLmxaCkPh5r4cqPw+l8NougSQPPQPWZjXaiFRZLkOdFEQ69Fxv6oWPKGyTinXO0bPoTfgRJbubeTwyURIxWaa+88Z1Y83pigJg0ood911D8FriSJCYNtHYp0OOyKHyCcFOaNIgV7rhh+fJYLFfyCKRIfgDUGQPunKttsUvEsUQbld2lWHkD9+B5vk8nsurR5pnHkwxkg2IouKZphabe7koiSESXnzPKG0iy8eXLAPU5DZZcdpbDZBJzBqiqT87abEtAGFD3kcGYq4JgQA7yJOYMyIDfEAfZ6kfJVUNTGaA5AxTodvkkrxbyUXUD8lEZA37zEjoNLnoFxZJ8VFsXkCZtUf4MMGiaZqRb0YEnSfgorKldyhhA59z8YZy4hLV8JA8tufywW3bialISGQMy8I+La5m/DiA9A9mISFfT6tNZEaFj5Q18i2gYcPzuULxRfQbLglS+HwPKnAHCANHlHR0MgpIMkNZBzQ9c9hjEDAbI+y9RTAsGSNFXKUCr6h/AoMU7QRkg5AAAAABJRU5ErkJggg==" 
 width="30px" height="30px" align="middle" value = "Test Button" onclick="Start_Button	()"/> <Br><Br>
 
-<!--<table class="table table-hover" id="PluginsTable">     <table class="table table-striped table-hover" id="PluginsTable"> -->
+       ---------------------------  -->
+
+<!-- <table class="table table-striped table-hover" id="PluginsTable"> -->
+<!-- <table class="table table-hover" id="PluginsTable">     declaration for  jQuery.FilterTable -->
+
 <table class="table table-hover" id="PluginsTable"> 
-<thead>
+ <thead>
   <tr class="warning">
     <th>#</th>
     <th>Name</th>
@@ -150,30 +186,27 @@ width="30px" height="30px" align="middle" value = "Test Button" onclick="Start_B
 	<th>Preview</th>
 	<th>State</th>
   </tr>
-</thead>
+</thead> 
 
   
 
-  
 
 <tbody>
 
-      <tr class="warning" id="filterRow">
+<!--       <tr class="warning" id="filterRow">
         
         <th></th>
         <th><input type="text" id="NameInputFilter" onkeyup="FilterTable()" placeholder="Search for names.." title="Type in a name"></th>
         <th></th>
         <th></th>
-		<th><input type="checkbox">Filter enabled	</th>
-      </tr>
+		<th><input type="checkbox">Filter enabled</th>
+      </tr> -->
 
 <script type="text/vbs">
 
 Set FSO = CreateObject("Scripting.FileSystemObject")
 if not FSO.FolderExists(".\Plugins") then FSO.CreateFolder(".\Plugins") ' We check if the folder exist...
 ShowSubfolders FSO.GetFolder(".\Plugins"), 1     'here we can indicate the depth of subfolders we want
-
-
 
 Sub ShowSubFolders(Folder, Depth)
 	
@@ -204,20 +237,20 @@ Sub ShowSubFolders(Folder, Depth)
 			
 			filepath = FSO.BuildPath(Subfolder.Path, "Preview.jpg")
 			If FSO.FileExists(filepath) Then
-				document.write "<td><img height='200' width='250' src=""" & filepath & """ alt=""Preview""></td>"
+				document.write "<td><img height='200' width='250' src=""" & filepath & """><div class='invisible'>jpg</div></td>"
 			Else
 				filepath = FSO.BuildPath(Subfolder.Path, "Preview.png")
 				If FSO.FileExists(filepath) Then
-					document.write "<td><img height='200' width='250' src=""" & filepath & """ alt=""Preview""></td>"
+					document.write "<td><img height='200' width='250' src=""" & filepath & """><div class='invisible'>png</div></td>"
 				Else
 					filepath = FSO.BuildPath(Subfolder.Path, "Preview.gif")
 					If FSO.FileExists(filepath) Then
-						document.write "<td><img data-gifffer-height='200' data-gifffer-width='250' data-gifffer=""" & filepath & """></td>"
+						document.write "<td><img data-gifffer-height='200' data-gifffer-width='250' data-gifffer=""" & filepath & """><div class='invisible'>gif</div></td>"
 					Else
 						filepath = FSO.BuildPath(Subfolder.Path, "Preview.mp4")
 						If FSO.FileExists(filepath) Then
 							'<!-- video-js Support (better player than the default integrated in IE/hta-->
-							document.write "<td><video id='my-video' class='video-js'  controls  preload='auto'  width='250'  height='200'  data-setup='{}' ><source src=""" & filepath & """ type='video/mp4' /></video></td>"
+							document.write "<td><video id='my-video' class='video-js'  controls  preload='auto'  width='250'  height='200'  data-setup='{}' ><source src=""" & filepath & """ type='video/mp4' />mp4</video></td>"  ' "mp4" is used for filter
 							'<!-- Default hta player-->
 							'document.write "<td><video width='250' height='200' controls>  <source src=""" & filepath & """ type='video/mp4'>Your browser does not support the video tag.</video></td>"
 							'document.write "<td><embed src=""" & filepath & """ width=""250"" height=""200"" autostart=""false"" type=""video/mp4""></td>"
@@ -235,19 +268,27 @@ Sub ShowSubFolders(Folder, Depth)
             ShowSubFolders Subfolder, Depth -1    'recursive call
         Next
     End if
-	
-	
-	
-	
+
 End Sub
 
 </script>
 
-
+<!--   This Tfoot will be transformed into search box thanks to search boxes -->
 	
 </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
 </table>
 
+
+<!--   Other tabs for futu use -->
 </div>
   <div class="tab-pane fade" id="profile">
     <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit.</p>
@@ -261,10 +302,13 @@ End Sub
 </div>
 
 <script>
+		//  ==================================== GIFFER (pause on .gif file) ====================================
 window.onload = function() {
     Gifffer();
 }
 
+		//  ==================================== allow to filter on checkbox state ====================================
+		/*
 $(document).ready(function() {
      $("#filterRow input[type=checkbox]").click(function(){
      if($(this).is(":checked"))
@@ -283,24 +327,17 @@ $(document).ready(function() {
      }
     });
 });
-
+*/
 
 
 
 </script>
 
+		<!--  ==================================== video js : alternative to the default video player ==================================== -->
   <script src="https://vjs.zencdn.net/7.8.1/video.js"></script>
 
-    <script>
-    $(document).ready(function() {
-        // apply filterTable to all tables on this page
-        $('table').filterTable({filterExpression: 'filterTableFindAny'});
-    });
-    </script>
-
-
-
-
+  		<!--  ==================================== Basic autonomous little function to filter a table (test 1/3) ==================================== -->
+  
 <!-- function FilterTable() {
   var input, filter, table, tr, td, i, txtValue;
   input = document.getElementById("NameInputFilter");
@@ -320,11 +357,52 @@ $(document).ready(function() {
   }
 } -->
 
+		<!--  ==================================== declaration for the library "jQuery.FilterTable" (test 2/3) ==================================== -->
+  <!--  jQuery.FilterTable initialisation function  -->
+   <!--
+    <script>
+    $(document).ready(function() {
+        // apply filterTable to all tables on this page
+        $('table').filterTable({filterExpression: 'filterTableFindAny'});
+    });
+    </script>
 
+ -->
 
+ 		<!--  ==================================== declaration for the library "datatables" (test 3/3) ==================================== -->
+<script>
+$(document).ready(function() {
+    // Setup - add a text input to each footer cell
+    $('#PluginsTable tfoot th').each( function () {
+        var title = $(this).text();
+        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+    });
+ 
+    // DataTable
+    var table = $('#PluginsTable').DataTable({
+        "initComplete": function () {
+            // Apply the search
+            this.api().columns().every( function () {
+                var that = this;
+				
+				$('#PluginsTable tfoot tr').appendTo('#PluginsTable thead');   // To displays the search boxs at the top instead to the bottom of the table
+                $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                });
+            });
+        },
+        "lengthMenu": [[5, 25, 50, -1], [5, 25, 50, "All"]]   //Page length options , cf. https://datatables.net/examples/advanced_init/length_menu
+    });
 
+});
 
-</body></html>
+  </script>
+  
+  </body></html>
 
 
 
@@ -341,7 +419,7 @@ $(document).ready(function() {
 
 
 '**********************************************************************************************************
-' Programmer: Ludvik Jerabek
+' Programmer of INI FILE CLASS: Ludvik Jerabek   https://www.codeproject.com/Articles/21896/INI-Reader-Writer-Class-for-C-VB-NET-and-VBScript
 '       Date: 02\14\2007
 '    Purpose: Allow INI manipulation in VB Script using high efficiency hashing.
 '             This code create a series of objects in memory which represent the INI file
