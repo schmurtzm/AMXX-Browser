@@ -1,4 +1,4 @@
-<!-- AMXX Browser V0.2 alpha -->
+<!-- AMXX Browser V0.3 alpha -->
 <!-- 2020-05-13 By Schmurtz -->
 <html>
     <head>
@@ -37,11 +37,24 @@
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">  </script>
 
 		<!--  ======================================= bootstrapcdn ======================================= -->
+		<!--	Choose your CSS skin here  :https://www.bootstrapcdn.com/legacy/bootswatch/  -->
 			
-			<!--  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/darkly/bootstrap.min.css">-->
-			<link rel='stylesheet' href='https://bootswatch.com/3/darkly/bootstrap.min.css'>
-			<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js'></script>
-
+			<!-- <link rel='stylesheet' href='https://bootswatch.com/3/darkly/bootstrap.min.css'>
+			 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/darkly/bootstrap.min.css"> 
+			
+			<link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.css">-->
+			
+			
+			<link rel="stylesheet" href="dependencies/Bootstrap/bootstrap.css">
+			<script src='dependencies/Bootstrap/bootstrap.min.js'></script>    
+			
+				
+			
+			
+			
+			<!-- 
+			<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js'></script>    
+				<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/3.4.1/slate/bootstrap.min.css"> -->
 
 		<!--  ======================================== Table Filter ======================================== -->
 
@@ -53,6 +66,12 @@
 			<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/b-colvis-1.6.2/b-html5-1.6.2/b-print-1.6.2/kt-2.5.2/sc-2.0.2/sp-1.1.0/datatables.min.css"/>
 			<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/b-colvis-1.6.2/b-html5-1.6.2/b-print-1.6.2/kt-2.5.2/sc-2.0.2/sp-1.1.0/datatables.min.js"></script>
 
+			
+			
+			<!-- OK with boostrap 3 too : https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap.min.css  --> 
+			
+			
+			
 			<!-- Working fine but not perfect CSS with bootstrapcdn
 			<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jqc-1.12.4/datatables.min.css"/>
 			<script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
@@ -175,14 +194,17 @@ width="30px" height="30px" align="middle" value = "Test Button" onclick="Start_B
        ---------------------------  -->
 
 <!-- <table class="table table-striped table-hover" id="PluginsTable"> -->
-<!-- <table class="table table-hover" id="PluginsTable">     declaration for  jQuery.FilterTable -->
+<!-- <table class="table table-hover" id="PluginsTable">     declaration for  jQuery.FilterTable 
+<!-- <table class="table table-striped table-bordered" id="PluginsTable"  > -->
 
 <table class="table table-hover" id="PluginsTable"> 
  <thead>
   <tr class="warning">
     <th>#</th>
     <th>Name</th>
-    <th>Description</th>
+    <th>mod</th>
+	<th>Category</th>
+	<th>Description</th>
 	<th>Preview</th>
 	<th>State</th>
   </tr>
@@ -192,18 +214,25 @@ width="30px" height="30px" align="middle" value = "Test Button" onclick="Start_B
 
 
 <tbody>
-
-<!--       <tr class="warning" id="filterRow">
+<!--
+      <tr class="warning" id="filterRow">
         
-        <th></th>
-        <th><input type="text" id="NameInputFilter" onkeyup="FilterTable()" placeholder="Search for names.." title="Type in a name"></th>
-        <th></th>
-        <th></th>
+        <td></td>
+        <td><input type="text" id="NameInputFilter" onkeyup="FilterTable()" placeholder="Search for names.." title="Type in a name"></td>
+        <td></td>
+        <td></td>
+		<td></td>
+		<td></td>
 		<th><input type="checkbox">Filter enabled</th>
-      </tr> -->
-
+      </tr> 
+-->
+	  
+<script language="VBScript" src="dependencies\iniwrite.vbs"></script>
 <script type="text/vbs">
 
+
+	
+	
 Set FSO = CreateObject("Scripting.FileSystemObject")
 if not FSO.FolderExists(".\Plugins") then FSO.CreateFolder(".\Plugins") ' We check if the folder exist...
 ShowSubfolders FSO.GetFolder(".\Plugins"), 1     'here we can indicate the depth of subfolders we want
@@ -217,18 +246,36 @@ Sub ShowSubFolders(Folder, Depth)
             'Wscript.Echo Subfolder.Path
 			StrData = ""
 			CurPluginNumber = CurPluginNumber + 1
+			
 			document.write "<tr class=""table-secondary""><td>" & CurPluginNumber & "</td><td>" & Subfolder.name & "</td>"   ' <<<<<<<<<------------------  Here we write the number and the name of the plugin (based on folder name)
 			
+			
 			' ============================  Description  ============================
-			filepath = FSO.BuildPath(Subfolder.Path, "Description.txt")
+			filepath = FSO.BuildPath(Subfolder.Path, "description.ini")
 			If FSO.FileExists(filepath) Then    ' Description file is the minimum to show a subfolder in the GUI
-				Set File = fso.OpenTextFile(filepath)
-				Do until File.atendofstream
-					StrData = StrData & "<Br>" & trim(File.ReadLine)
-				Loop
-				File.close
-				document.write "<td>" & StrData & "</td>"       ' <<<<<<<<<------------------  Here we write the description
+			
+			
+					Dim ini
+					Set ini = New IniFile
+					Call ini.Load(filepath,1)
+					' test to include url directly in the name -> prefer to put it in description
+					'document.write "<tr class=""table-secondary""><td>" & CurPluginNumber & "</td><td><a href='" &  ini.GetKeyValue("Details","url") & "'>" & Subfolder.name & "</a></td>"   ' <<<<<<<<<------------------  Here we write the number and the name of the plugin (based on folder name)
+					document.write "<td>" &  ini.GetKeyValue("Details","Category") & "</td>"
+					document.write "<td>" &  ini.GetKeyValue("Details","Mod") & "</td>"
+					document.write "<td><a class='text-info' href='" &  ini.GetKeyValue("Details","url") & "'>Source</a> - <a class='text-info' href='Plugins/"& Subfolder.name & "/backup.mht'>Backup</a><br>" &  ini.GetKeyValue("Details","ShortDescription") & "</td>" 
+					set ini = nothing
+					
+					
+				' Set File = fso.OpenTextFile(filepath)
+				' Do until File.atendofstream
+					' StrData = StrData & "<Br>" & trim(File.ReadLine)
+				' Loop
+				' File.close
+				' document.write "<td>" & StrData & "</td>"       ' <<<<<<<<<------------------  Here we write the description
 			Else
+				
+				document.write "<td> No Description</td>"
+				document.write "<td> No Description</td>"
 				document.write "<td> No Description</td>"
 				'Wscript.Echo "File does not exist."    ' Here we log that a subfolder exist without description
 			End If
@@ -271,6 +318,14 @@ Sub ShowSubFolders(Folder, Depth)
 
 End Sub
 
+
+
+
+
+
+
+
+
 </script>
 
 <!--   This Tfoot will be transformed into search box thanks to search boxes -->
@@ -283,6 +338,8 @@ End Sub
                 <th></th>
                 <th></th>
                 <th></th>
+				<th></th>
+				<th></th>
             </tr>
         </tfoot>
 </table>
@@ -307,8 +364,8 @@ window.onload = function() {
     Gifffer();
 }
 
-		//  ==================================== allow to filter on checkbox state ====================================
-		/*
+		//  ==================================== basic function to allow to filter on checkbox state ====================================
+/*
 $(document).ready(function() {
      $("#filterRow input[type=checkbox]").click(function(){
      if($(this).is(":checked"))
@@ -375,14 +432,15 @@ $(document).ready(function() {
     // Setup - add a text input to each footer cell
     $('#PluginsTable tfoot th').each( function () {
         var title = $(this).text();
-        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+        $(this).html( '<input type="text"  class="form-control" placeholder="Search '+title+'" />' );
     });
  
     // DataTable
     var table = $('#PluginsTable').DataTable({
         "initComplete": function () {
             // Apply the search
-            this.api().columns().every( function () {
+            //this.api().columns().every( function () {     // If you want to only show certain columns you can use a array, see below : 
+			this.api().columns([1, 4]).every( function () {
                 var that = this;
 				
 				$('#PluginsTable tfoot tr').appendTo('#PluginsTable thead');   // To displays the search boxs at the top instead to the bottom of the table
@@ -394,12 +452,144 @@ $(document).ready(function() {
                     }
                 });
             });
+			
+			
+			// -------------- here we add dropdown selectors filters to specified columns  --------------
+				this.api().columns([2,3,5]).every( function () {
+                var column = this;
+                var select = $('<select class="form-control"><option  value=""></option></select>')
+                    .appendTo( $(column.footer()).empty() )
+                    .on( 'change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+ 
+                        column
+                            .search( val ? '^'+val+'$' : '', true, false )
+                            .draw();
+                    } );
+ 
+                column.data().unique().sort().each( function ( d, j ) {
+                    select.append( '<option value="'+d+'">'+d+'</option>' )
+                } );
+            });
+			
+			
+			// -------------- here we add dropdown selectors specific for preview files  --------------
+				this.api().columns([5]).every( function () {
+                var column = this;
+                var select = $('<select class="form-control"><option  value=""></option></select>')
+                    .appendTo( $(column.footer()).empty() )
+                    .on( 'change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+ 
+                        column
+                            .search( this.value )
+                            .draw();
+                    } );
+ 
+                 {
+                    select.append( '<option value="jpg">jpg</option>' )
+					select.append( '<option value="png">png</option>' )
+					select.append( '<option value="gif">gif</option>' )
+					select.append( '<option value="mp4">mp4</option>' )
+                } ;
+            });
+			
+			// -------------- here we add checkbox state   --------------
+			
+			
+
+
+                    this.api().columns([6]).every(function () {
+                        var column = this;
+                        var select = $('<input type="checkbox" id="chk">')
+                            .appendTo($(column.footer()).empty())
+                            .on('change', function () {
+                                var ischecked = $(this).is(':checked');
+                                if (ischecked) {
+                                    table.draw();
+                                    $.fn.dataTable.ext.search.pop();
+                                    $.fn.dataTable.ext.search.push(
+                                        function (settings, data, dataIndex) {
+                                            if ($('#chk_' + dataIndex).is(":checked")){
+                                                return true;
+                                            }
+                                            else
+                                            {
+                                                return false;
+                                            }
+                                        }
+                                    );
+
+                                    table.draw();
+
+                                } else {
+                                    table.draw();
+                                    $.fn.dataTable.ext.search.pop();
+                                    $.fn.dataTable.ext.search.push(
+                                        function (settings, data, dataIndex) {
+                                            if ($('#chk_' + dataIndex).is(":checked")){
+                                                return false;
+                                            }
+                                            else
+                                            {
+                                                return true;
+                                            }
+                                        }
+                                    );
+
+                                    table.draw();
+                                }
+                            });
+
+
+                    });
+
+
+
+
+			
+			
+			
+			
+			
+			
         },
         "lengthMenu": [[5, 25, 50, -1], [5, 25, 50, "All"]]   //Page length options , cf. https://datatables.net/examples/advanced_init/length_menu
     });
 
 });
 
+
+/*
+$(document).ready(function() {
+    $('#PluginsTable').DataTable( {
+        initComplete: function () {
+            this.api().columns().every( function () {
+                var column = this;
+                var select = $('<select><option value=""></option></select>')
+                    .appendTo( $(column.footer()).empty() )
+                    .on( 'change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+ 
+                        column
+                            .search( val ? '^'+val+'$' : '', true, false )
+                            .draw();
+                    } );
+ 
+                column.data().unique().sort().each( function ( d, j ) {
+                    select.append( '<option value="'+d+'">'+d+'</option>' )
+                } );
+            } );
+        }
+    } );
+} );
+*/
   </script>
   
   </body></html>
@@ -408,435 +598,6 @@ $(document).ready(function() {
 
 
 
-<SCRIPT language="VBScript">
-'*************************************************************************************
-'
-'
-'	INI FILE CLASS AND SUB CLASSES START HERE 
-'
-'
-'*************************************************************************************
-
-
-'**********************************************************************************************************
-' Programmer of INI FILE CLASS: Ludvik Jerabek   https://www.codeproject.com/Articles/21896/INI-Reader-Writer-Class-for-C-VB-NET-and-VBScript
-'       Date: 02\14\2007
-'    Purpose: Allow INI manipulation in VB Script using high efficiency hashing.
-'             This code create a series of objects in memory which represent the INI file
-'             structure. All objects are mapped into memory using the "Scripting.Dictionary"
-'             object. The IniFile object is made up of IniSection objects, and IniSection objects
-'             are made up of IniKey objects. See the sample code in this project to understand
-'             usage. Expected efficiency should be O(log n) but depends on the efficiency
-'             of the "Scripting.Dictionary" object.
-'
-'	Revisions
-'
-'	02\14\2007 - Ludvik Jerabek - Initial VBScript version
-'	12\08\2007 - Ludvik Jerabek - Fixed regex parse string issue
-'	08\23\2010 - Ludvik Jerabek - Rewrote version to uses hashing
-'	11\12\2010 - Ludvik Jerabek - Fixed section regex matching on key values with brackets
-'	06\20\2015 - Ludvik Jerabek - Fixed key parsing regex to account for keys with spaces in names
-'
-'**********************************************************************************************************
-
-'IniFile class used to read and write ini files by loading the file into memory
-Class IniFile
-    'List of IniSection objects keeps track of all the sections in the INI file
-    Private m_pSections
-    'Public constructor
-    Public Sub Class_Initialize()
-        Set m_pSections = CreateObject("Scripting.Dictionary")
-		m_pSections.CompareMode = vbTextCompare
-    End Sub
-    
-    'Returns an array of the IniSections in the IniFile
-    Public Property Get Sections
-         Sections = m_pSections.Items
-    End Property
-
-    'Load IniFile object with existing INI Data
-    Public Sub Load( ByVal sFileName , ByVal bAppend )
-    	If Not bAppend Then RemoveAllSections() ' Clear the object...
-    	
-        Dim objFSO : Set objFSO = CreateObject("Scripting.FileSystemObject") 
-        Dim tempsection : Set tempsection = Nothing
-        Dim oReader : Set oReader = objFSO.OpenTextFile( sFileName )
-        Dim regexsection : set regexsection = new regexp 
-        Dim regexkey : Set regexkey = new regexp
-		Dim regexcomment : Set regexcomment = new regexp
-          
-        regexcomment.Pattern = "^([\s]*#.*)"
-		regexcomment.Global = False
-		regexcomment.IgnoreCase = True
-		regexcomment.MultiLine = False
-		
-		' Left for history
-        	'regexsection.Pattern = "\[[\s]*([^\[\s].*[^\s\]])[\s]*\]"
-        	regexsection.Pattern = "^[\s]*\[[\s]*([^\[\s].*[^\s\]])[\s]*\][\s]*$"
-		regexsection.Global = False
-		regexsection.IgnoreCase = True
-		regexsection.MultiLine = False
-		
-		regexkey.Pattern = "^\s*([^=]*[^\s=])\s*=(.*)"
-		regexkey.Global = False
-		regexkey.IgnoreCase = True
-		regexkey.MultiLine = False
-		
-        While Not oReader.AtEndOfStream
-        	Dim line : line = oReader.ReadLine()
-			If line <> "" Then
-            	Dim m
-                If regexcomment.Test(line) Then
-                    Set m = regexcomment.Execute(line)
-		    		'msgbox("Skipping Comment " & m.Item(0).subMatches.Item(0) )
-                ElseIf regexsection.Test(line) Then
-                    Set m = regexsection.Execute(line)
-                    'msgbox("Adding section [" & m.Item(0).subMatches.Item(0) &"]" )
-                    Set tempsection = AddSection( m.Item(0).subMatches.Item(0) )
-                ElseIf regexkey.Test(line) And Not tempsection Is Nothing Then
-                    Set m = regexkey.Execute(line)
-                    'msgbox("Adding Key ["& m.Item(0).subMatches.Item(0) &"]=["& m.Item(0).subMatches.Item(1) &"]" )
-                    tempsection.AddKey( m.Item(0).subMatches.Item(0) ).Value = m.Item(0).subMatches.Item(1)
-				ElseIf Not tempsection Is Nothing Then
-					'msgbox("Adding Key ["& line &"]" )
-		    		tempsection.AddKey( line )
-                'Else
-                 '   msgbox("Skipping unknown type of data: " & line)
-                End If
-            End If
-        Wend
-        oReader.Close()
-    End Sub
-
-
-    'Allows you to do a save the IniFile resident in memory to file
-    Public Sub Save(ByVal sFileName)
-    	Dim objFSO : Set objFSO = CreateObject("Scripting.FileSystemObject")
-        Dim oWriter : Set oWriter = objFSO.CreateTextFile( sFileName , True )
-        Dim s 'IniSection
-        Dim k 'IniKey
-        For Each s In Sections
-            'msgbox("Writing Section: " & s.Name)
-            oWriter.WriteLine("[" & s.Name & "]")
-            For Each k In s.Keys
-				If k.Value <> vbNullString Then
-	            	'msgbox("Writing Key: "&k.Name&"="&k.Value)
-	                oWriter.WriteLine(k.Name & "="& k.Value )
-				Else
-					'msgbox("Writing Key: "&k.Name)
-					oWriter.WriteLine(k.Name)
-				End if
-            Next
-        Next
-        oWriter.Close()
-    End Sub
-
-    'Returns the IniSection object associated with a section name
-    Public Function GetSection(ByVal sSection )
-        Set GetSection = Nothing
-        sSection = Trim(sSection) 'Trim spaces
-        If Len( sSection ) <> 0 Then
-        	If m_pSections.Exists( sSection ) Then
-        		Set GetSection = m_pSections.Item(sSection)
-        	End If
-        End If
-    End Function
-
-    ' Adds a section to the IniFile object, returns a IniSection object
-    Public Function AddSection(ByVal sSection )
-    	Set AddSection = Nothing
-		If StrComp(TypeName(sSection),"IniSection",1) = 0 Then 
-			If Not sSection Is Nothing Then
-				' Only purpose is to be used by child to re-insert
-				If Not sSection Is Nothing Then
-					If Not m_pSections.Exists( sSection.Name ) Then
-	       				Set m_pSections.Item( sSection.Name ) = sSection
-	       				Set AddSection = sSection
-	    	   		End If
-				End If
-			End If 
-		ElseIf StrComp(TypeName(sSection),"String",1) = 0 Then
-        	sSection = Trim(sSection)
-        	If Len( sSection ) <> 0 Then 
-	        	If m_pSections.Exists( sSection ) Then
-        			Set AddSection = m_pSections.Item(sSection)
-        		Else
-	        		Dim s : Set s = New IniSection
-        			Call s.Init( Me , sSection )
-        			Set m_pSections.Item(sSection) = s
-        			Set AddSection = s
-        		End If
-	        End If		
-		End If
-    End Function
-
-    ' Removes all existing sections (clears the object) 
-    Public Sub RemoveAllSections()
-        Call m_pSections.RemoveAll()
-    End Sub
-
-	' Remove a section by name or section object
-	Public Function RemoveSection(ByVal Obj)
-		RemoveSection = False
-		If StrComp(TypeName(Obj),"IniSection",1) = 0 Then 
-			If Not Obj Is Nothing Then
-				m_pSections.Remove(Obj.Name)
-				RemoveSection = True
-			End If 
-		ElseIf StrComp(TypeName(Obj),"String",1) = 0 Then
-			RemoveSection = RemoveSection( GetSection(Obj) )
-		End If 
-	End Function
-
-	' Remove a key by section namd and key name
-	Public Function RemoveKey(ByVal sSection , ByVal sKey)
-		RemoveKey = False
-        Dim s : Set s = GetSection(sSection)
-        If Not s Is Nothing Then
-            RemoveKey = s.RemoveKey( sKey )
-        End If
-	End Function
-	
-    ' Returns a KeyValue in a certain section
-    Public Function GetKeyValue(ByVal sSection , ByVal sKey )
-    	GetKeyValue = vbNullString
-        Dim s : Set s = GetSection(sSection)
-        If Not s Is Nothing Then
-            Dim k : Set k = s.GetKey(sKey)
-            If Not k Is Nothing Then
-                GetKeyValue = k.Value
-            End If
-        End If
-    End Function
-
-    ' Sets a KeyValuePair in a certain section
-    Public Function SetKeyValue(ByVal sSection , ByVal sKey , ByVal sValue )
-        SetKeyValue = False
-        Dim s : Set s = AddSection(sSection)
-        If Not s Is Nothing Then
-            Dim k : Set k = s.AddKey(sKey)
-            If Not s Is Nothing Then
-                k.Value = sValue
-                SetKeyValue = True
-            End If
-        End If
-    End Function
-
-    ' Renames an existing section returns true on success, false if the section didn't exist or there was another section with the same sNewSection
-    Public Function RenameSection(ByVal sSection , ByVal sNewSection)
-        ' Note string trims are done in lower calls.
-        RenameSection = False
-        Dim s : Set s = GetSection(sSection)
-        If Not s Is Nothing Then
-            RenameSection = s.SetName(sNewSection)
-        End If
-    End Function
-
-    ' Renames an existing key returns true on success, false if the key didn't exist or there was another section with the same sNewKey
-    Public Function RenameKey(ByVal sSection , ByVal sKey, ByVal sNewKey)
-        ' Note string trims are done in lower calls.
-        RenameKey = False
-        Dim s : Set s = GetSection(sSection)
-        If Not s Is Nothing Then
-            Dim k : Set k = s.GetKey(sKey)
-            If Not k Is Nothing Then
-                RenameKey = k.SetName(sNewKey)
-            End If
-        End If
-    End Function
-	
-End Class
-
-
-'IniSection Class 
-Class IniSection
-   ' IniFile IniFile object instance
-   Private m_pIniFile
-   ' Name of the section
-   Private m_sSection
-   ' List of IniKeys in the section
-   Private m_keys
-
-   'Friend constuctor so objects are internally managed
-   Public Sub Class_Initialize
-       Set m_pIniFile = Nothing
-       m_sSection = ""
-       Set m_keys = CreateObject("Scripting.Dictionary")
-       m_keys.CompareMode = vbTextCompare
-   End Sub
-
-   	' Function only works once...
-   	Public Sub Init( ByVal oIniFile , ByVal sSection )
-   		If m_pIniFile is Nothing Then 
-   			Set m_pIniFile = oIniFile
-   			m_sSection = sSection
-   		End If 	
-   	End Sub
-
-    'Returns an array of the IniKeys in the IniFile
-    Public Property Get Keys
-         Keys = m_keys.Items
-    End Property
-    
-   'Returns the section name
-   Public Property Get Name
-           name = m_sSection
-   End Property
-    
-   'Set the section name
-   'Returns true on success, False if key already exists in the section
-   Public Function SetName(ByVal sSection)
-       SetName = False  ' Default
-       sSection = Trim(sSection)
-       If Len( sSection ) <> 0 Then
-           Dim s : Set s = m_pIniFile.GetSection(sSection)
-           If Not s Is Me And Not s Is Nothing Then Exit Function
-           Call m_pIniFile.RemoveSection(Me)
-           m_sSection = sSection
-           Call m_pIniFile.AddSection(Me)           
-           SetName = True
-       End If
-   End Function
-
-   'Returns the section name
-   Public Function GetName()
-           GetName = m_sSection
-   End Function
-   
-   'Adds a key to the IniSection object
-   'Returns Nothing on failure
-	Public Function AddKey(ByVal sKey)
-		Set AddKey = Nothing
-		' Is this a string or object of IniKey
-		If StrComp(TypeName(sKey),"IniKey",1) = 0 Then 
-			' Only purpose is to be used by child to re-insert
-			If Not sKey Is Nothing Then
-				If Not m_keys.Exists( sKey.Name ) Then
-	       			Set m_keys.Item(sKey.Name) = sKey
-	       			Set AddKey = sKey
-	    	   	End If
-			End If
-		ElseIf StrComp(TypeName(sKey),"String",1) = 0 Then
-			' String was passed...
-			sKey = Trim(sKey)
-			If Len(sKey) <> 0 Then
-				If m_keys.Exists( sKey ) Then
-		       		Set AddKey = m_keys.Item(sKey)
-	    	   	Else
-	       			Dim k : Set k = New IniKey
-		       		Call k.Init( Me , sKey )
-	       			Set m_keys.Item(sKey) = k
-	       			Set AddKey = k
-	       		End If
-       		End If
-		End If        
-   End Function
-
-   'Returns a IniKey
-   'Returns Nothing on failure 
-	Public Function GetKey(ByVal sKey)
-   		Set GetKey = Nothing
-    	sKey = Trim(sKey)
-    	If Len(sKey) <> 0 Then
-	       	If m_keys.Exists( sKey ) Then
-	       		Set GetKey = m_keys.Item(sKey)
-	       	End If 
-		End If
-	End Function
-
-   'Removes all the keys in the section
-   Public Sub RemoveAllKeys()
-       Call m_keys.RemoveAll()
-   End Sub
-   
-   'Removes a single key by IniKey object by string or object
-   Public Function RemoveKey(ByVal Obj)
-       	RemoveKey = False
-		If StrComp(TypeName(Obj),"IniKey",1) = 0 Then 
-			If Not Obj Is Nothing Then
-			 	m_keys.Remove(Obj.Name)
-				RemoveKey = True
-			End If
-		ElseIf StrComp(TypeName(Obj),"String",1) = 0 Then
-			RemoveKey = RemoveKey( GetKey(Obj) )
-		End If        
-   End Function
-
-End Class  ' End of IniSection
-    
-'IniKey Class
-Class IniKey
-    ' Name of the Key
-    Private m_sKey
-    ' Value associated
-    Private m_sValue
-    ' Pointer to the parent CIniSection
-    Private m_pSection
-
-    'Friend constuctor so objects are internally managed
-    Public Sub Class_Initialize
-    	m_sKey = ""
-    	m_sValue = ""
-        Set m_pSection = Nothing
-    End Sub
-
-    'Returns the key's parent IniSection
-    Public Sub Init( ByVal oIniSection , ByVal sKey )
-           If m_pSection Is Nothing Then
-            	Set m_pSection = oIniSection
-            	m_sKey = sKey
-           End If 
-    End Sub
-    
-    'Returns the name of the Key
-    Public Property Get Name
-            name = m_sKey
-    End Property
-
-'     'Gets\Sets the value associated with the Key
-     Public Property Let Value( strKeyValue )
-             m_sValue = strKeyValue
-     End Property
-
-    'Gets\Sets the value associated with the Key
-    Public Property Get Value()
-            value = m_sValue
-    End Property
-
-    'Sets the key name
-    'Returns true on success, fails if the section name sKeyName already exists
-    Public Function SetName(ByVal sKey )
-    	SetName = False
-        sKey = Trim(sKey)
-        If Len(sKey) <> 0 Then
-            Dim s : Set s = m_pSection.GetKey(sKey)
-            If Not s Is Me And Not s Is Nothing Then Exit Function
-            Call m_pSection.RemoveKey(Me)
-            ' Set our new name
-            m_sKey = sKey
-            ' Put our own object back
-            Call m_pSection.AddKey(Me)
-            SetName = True
-        End If
-    End Function
-    
-    ' Returns the current key name
-    Public Function GetName()
-		    GetName = m_sKey
-    End Function
-    
-End Class
-
-
-'*************************************************************************************
-'
-'
-'	INI FILE CLASS AND SUBCLASSES END HERE
-'
-'
-'*************************************************************************************
-
-
-
+<script type="text/vbs">
 
 </script>
