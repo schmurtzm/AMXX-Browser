@@ -1,5 +1,5 @@
-<!-- AMXX Browser V0.3 alpha -->
-<!-- 2020-05-13 By Schmurtz -->
+<!-- AMXX Browser V0.4 alpha -->
+<!-- 2020-05-15 By Schmurtz -->
 <html>
     <head>
 		<meta charset="utf-8">
@@ -185,6 +185,8 @@ End Sub
 <div id="myTabContent" class="tab-content">
   <div class="tab-pane fade active in" id="home">
 	<BR>
+  
+  
   <!--   --------------------------- some tests for later....
   <img src="data:image/gif;base64,R0lGODlhEAAOALMAAOazToeHh0tLS/7LZv/0jvb29t/f3//Ub//ge8WSLf/rhf/3kdbW1mxsbP//mf///yH5BAAAAAAALAAAAAAQAA4AAARe8L1Ekyky67QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjgaORCMxIC6e0CcguWw6aFjsVMkkIr7g77ZKPJjPZqIyd7sJAgVGoEGv2xsBxqNgYPj/gAwXEQA7"width="16" height="14" alt="embedded folder icon">
   
@@ -262,7 +264,7 @@ Sub ShowSubFolders(Folder, Depth)
 					'document.write "<tr class=""table-secondary""><td>" & CurPluginNumber & "</td><td><a href='" &  ini.GetKeyValue("Details","url") & "'>" & Subfolder.name & "</a></td>"   ' <<<<<<<<<------------------  Here we write the number and the name of the plugin (based on folder name)
 					document.write "<td>" &  ini.GetKeyValue("Details","Category") & "</td>"
 					document.write "<td>" &  ini.GetKeyValue("Details","Mod") & "</td>"
-					document.write "<td><a class='text-info' href='" &  ini.GetKeyValue("Details","url") & "'>Source</a> - <a class='text-info' href='Plugins/"& Subfolder.name & "/backup.mht'>Backup</a><br>" &  ini.GetKeyValue("Details","ShortDescription") & "</td>" 
+					document.write "<td><a class='text-info' href='" &  ini.GetKeyValue("Details","url") & "' target='_blank'>Source</a> - <a class='text-info' href='Plugins/"& Subfolder.name & "/backup.mht' target='_blank'>Backup</a><br>" &  ini.GetKeyValue("Details","ShortDescription") & "</td>" 
 					set ini = nothing
 					
 					
@@ -311,7 +313,7 @@ Sub ShowSubFolders(Folder, Depth)
 				End If
 			End If
 			
-			document.write "<td><input type=""checkbox"" id='chk_"& CurPluginNumber &"'><button type=""button"" class=""btn btn-success"">Add</button><button type=""button"" class=""btn btn-danger"">Remove</button></td></tr>"   ' <<<<<<<<<------------------  Here we write the actions column
+			document.write "<td><input type=""checkbox"" id='chk_"& CurPluginNumber -1 &"'><button type=""button"" class=""btn btn-success"">Add</button><button type=""button"" class=""btn btn-danger"">Remove</button></td></tr>"   ' <<<<<<<<<------------------  Here we write the actions column
             ShowSubFolders Subfolder, Depth -1    'recursive call
         Next
     End if
@@ -437,6 +439,11 @@ $(document).ready(function() {
  
     // DataTable
     var table = $('#PluginsTable').DataTable({
+	'pageLength': 50,    // where you choose the default number of row displayed
+	 /*   dom: 'Blfrtip',
+    buttons: [    // here you can display button to export table data
+      'copy', 'csv', 'excel', 'pdf', 'print'
+    ],*/
         "initComplete": function () {
             // Apply the search
             //this.api().columns().every( function () {     // If you want to only show certain columns you can use a array, see below : 
@@ -455,7 +462,7 @@ $(document).ready(function() {
 			
 			
 			// -------------- here we add dropdown selectors filters to specified columns  --------------
-				this.api().columns([2,3,5]).every( function () {
+				this.api().columns([2,3]).every( function () {
                 var column = this;
                 var select = $('<select class="form-control"><option  value=""></option></select>')
                     .appendTo( $(column.footer()).empty() )
@@ -470,7 +477,7 @@ $(document).ready(function() {
                     } );
  
                 column.data().unique().sort().each( function ( d, j ) {
-                    select.append( '<option value="'+d+'">'+d+'</option>' )
+                    select.append( '<option value="'+d+'">'+d+'</option>' );
                 } );
             });
 			
@@ -491,53 +498,52 @@ $(document).ready(function() {
                     } );
  
                  {
-                    select.append( '<option value="jpg">jpg</option>' )
-					select.append( '<option value="png">png</option>' )
-					select.append( '<option value="gif">gif</option>' )
-					select.append( '<option value="mp4">mp4</option>' )
-                } ;
+                    select.append( '<option value="jpg">jpg</option>' );
+					select.append( '<option value="png">png</option>' );
+					select.append( '<option value="gif">gif</option>' );
+					select.append( '<option value="mp4">mp4</option>' );
+                }
             });
 			
 			// -------------- here we add checkbox state   --------------
 			
 			
-
-
-                    this.api().columns([6]).every(function () {
+this.api().columns([6]).every(function () {
                         var column = this;
                         var select = $('<input type="checkbox" id="chk">')
                             .appendTo($(column.footer()).empty())
                             .on('change', function () {
                                 var ischecked = $(this).is(':checked');
                                 if (ischecked) {
-                                    table.draw();
+                                    // If selected records should be displayed
                                     $.fn.dataTable.ext.search.pop();
                                     $.fn.dataTable.ext.search.push(
                                         function (settings, data, dataIndex) {
-                                            if ($('#chk_' + dataIndex).is(":checked")){
+                                            var row = table.row(dataIndex).node();
+                                            var checked = $('#chk_' + dataIndex).prop('checked');
+                                            var currentCheckChecked = $(row).find('input').prop('checked');
+                                            if (currentCheckChecked ) { 
                                                 return true;
                                             }
-                                            else
-                                            {
-                                                return false;
-                                            }
+
+                                            return false;
                                         }
                                     );
 
                                     table.draw();
 
                                 } else {
-                                    table.draw();
                                     $.fn.dataTable.ext.search.pop();
                                     $.fn.dataTable.ext.search.push(
                                         function (settings, data, dataIndex) {
-                                            if ($('#chk_' + dataIndex).is(":checked")){
-                                                return false;
-                                            }
-                                            else
-                                            {
+                                            var row = table.row(dataIndex).node();
+                                            var checked = $('#chk_' + dataIndex).prop('checked');
+                                            var currentCheckChecked = $(row).find('input').prop('checked');
+                                            if (currentCheckChecked ) {  
                                                 return true;
                                             }
+
+                                            return true;
                                         }
                                     );
 
