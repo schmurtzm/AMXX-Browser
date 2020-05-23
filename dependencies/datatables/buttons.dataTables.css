@@ -1,0 +1,16 @@
+
+/* put "clear Filters at right (not able to put it on the same line...)  */
+div.dt-buttons {
+  float: right;
+  margin-right:35px;
+}
+
+/* to be sure that the search box is at right */
+/* we could hide it   visibility: hidden; */
+.dataTables_filter {
+  text-align: right !important;
+  margin-right:20px;
+ 
+  }
+
+ 
